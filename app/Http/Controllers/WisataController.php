@@ -4,15 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Wisata;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class WisataController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $wisata = Wisata::all();
+        $query = Wisata::query();
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('nama_wisata', 'like', '%' . $request->search . '%')
+                  ->orWhere('lokasi', 'like', '%' . $request->search . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
+        }
+
+        $wisata = $query->get();
         return view('wisata.index', compact('wisata'));
     }
 
@@ -21,6 +30,9 @@ class WisataController extends Controller
      */
     public function create()
     {
+        if (!Session::has('user') || !Session::get('user')->isAdmin()) {
+            return redirect('/')->with('error', 'Hanya admin yang bisa menambah wisata!');
+        }
         return view('wisata.create');
     }
 
@@ -62,6 +74,9 @@ class WisataController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Session::has('user') || !Session::get('user')->isAdmin()) {
+            return redirect('/')->with('error', 'Hanya admin yang bisa mengedit wisata!');
+        }
         $wisata = Wisata::findOrFail($id);
         return view('wisata.edit', compact('wisata'));
     }
@@ -96,6 +111,9 @@ class WisataController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Session::has('user') || !Session::get('user')->isAdmin()) {
+            return redirect('/')->with('error', 'Hanya admin yang bisa menghapus wisata!');
+        }
         $wisata = Wisata::findOrFail($id);
         $wisata->delete();
 

@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Pemesanan;
+use App\Models\Wisata;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
+class PemesananController extends Controller
+{
+    public function create($wisata_id)
+    {
+        if (!Session::has('user')) {
+            return redirect('/login')->with('error', 'Silakan login terlebih dahulu!');
+        }
+
+        $wisata = Wisata::findOrFail($wisata_id);
+        return view('pemesanan.create', compact('wisata'));
+    }
+
+    public function store(Request $request)
+    {
+        if (!Session::has('user')) {
+            return redirect('/login')->with('error', 'Silakan login terlebih dahulu!');
+        }
+
+        $request->validate([
+            'wisata_id' => 'required|exists:wisata,id',
+            'tanggal_pemesanan' => 'required|date|after:today',
+            'jumlah_tiket' => 'required|integer|min:1',
+        ]);
+
+        $wisata = Wisata::findOrFail($request->wisata_id);
+        $total_harga = $wisata->harga_tiket * $request->jumlah_tiket;
+
+        Pemesanan::create([
+            'user_id' => Session::get('user')->id,
+            'wisata_id' => $request->wisata_id,
+            'tanggal_pemesanan' => $request->tanggal_pemesanan,
+            'jumlah_tiket' => $request->jumlah_tiket,
+            'total_harga' => $total_harga,
+        ]);
+
+        return redirect('/pemesanan/history')->with('success', 'Pemesanan berhasil dibuat!');
+    }
+
+    public function history()
+    {
+        if (!Session::has('user')) {
+            return redirect('/login')->with('error', 'Silakan login terlebih dahulu!');
+        }
+
+        $pemesanan = Pemesanan::where('user_id', Session::get('user')->id)
+            ->with('wisata')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pemesanan.history', compact('pemesanan'));
+    }
+}

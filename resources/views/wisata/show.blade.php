@@ -12,6 +12,13 @@
     <p><strong>Lokasi:</strong> {{ $wisata->lokasi }}</p>
     <p><strong>Deskripsi:</strong> {{ $wisata->deskripsi }}</p>
     <p><strong>Harga Tiket:</strong> Rp {{ number_format($wisata->harga_tiket, 0, ',', '.') }}</p>
+    @if(Session::has('user'))
+        <a href="{{ route('pemesanan.create', $wisata->id) }}" class="btn btn-success">Pesan Tiket</a>
+    @else
+        <a href="{{ route('login') }}" class="btn btn-primary">Login untuk Pesan</a>
+    @endif
     <a href="{{ route('wisata.index') }}" class="btn btn-secondary">Kembali</a>
-    <a href="{{ route('wisata.edit', $wisata->id) }}" class="btn btn-warning">Edit</a>
+    @if(Session::has('user') && Session::get('user')->isAdmin())
+        <a href="{{ route('wisata.edit', $wisata->id) }}" class="btn btn-warning">Edit</a>
+    @endif
 @endsection

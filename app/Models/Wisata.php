@@ -15,4 +15,9 @@ class Wisata extends Model
         'harga_tiket',
         'gambar',
     ];
+
+    public function pemesanan()
+    {
+        return $this->hasMany(Pemesanan::class);
+    }
 }
