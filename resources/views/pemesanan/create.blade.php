@@ -37,6 +37,15 @@
                             <input type="number" class="form-control" id="jumlah_tiket" name="jumlah_tiket" min="1" required>
                         </div>
                         <div class="mb-3">
+                            <label for="penginapan_id" class="form-label">Pilih Penginapan (Opsional)</label>
+                            <select class="form-control" id="penginapan_id" name="penginapan_id">
+                                <option value="">Tidak pilih penginapan</option>
+                                @foreach($wisata->penginapan as $penginapan)
+                                    <option value="{{ $penginapan->id }}" data-harga="{{ $penginapan->harga }}">{{ $penginapan->nama_penginapan }} - Rp {{ number_format($penginapan->harga, 0, ',', '.') }}/malam</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label for="total_harga" class="form-label">Total Harga</label>
                             <input type="text" class="form-control" id="total_harga" name="total_harga" readonly>
                         </div>
@@ -49,11 +58,17 @@
     </div>
 
     <script>
-        document.getElementById('jumlah_tiket').addEventListener('input', function() {
-            const jumlah = this.value;
-            const harga = {{ $wisata->harga_tiket }};
-            const total = jumlah * harga;
+        function updateTotalHarga() {
+            const jumlah = document.getElementById('jumlah_tiket').value;
+            const hargaWisata = {{ $wisata->harga_tiket }};
+            const penginapanSelect = document.getElementById('penginapan_id');
+            const selectedOption = penginapanSelect.options[penginapanSelect.selectedIndex];
+            const hargaPenginapan = selectedOption.getAttribute('data-harga') || 0;
+            const total = (jumlah * hargaWisata) + parseInt(hargaPenginapan);
             document.getElementById('total_harga').value = 'Rp ' + total.toLocaleString('id-ID');
-        });
+        }
+
+        document.getElementById('jumlah_tiket').addEventListener('input', updateTotalHarga);
+        document.getElementById('penginapan_id').addEventListener('change', updateTotalHarga);
     </script>
 @endsection

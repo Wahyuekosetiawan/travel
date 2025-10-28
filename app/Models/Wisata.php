@@ -20,4 +20,9 @@ class Wisata extends Model
     {
         return $this->hasMany(Pemesanan::class);
     }
+
+    public function penginapan()
+    {
+        return $this->hasMany(Penginapan::class);
+    }
 }

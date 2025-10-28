@@ -10,6 +10,7 @@
                 <thead>
                     <tr>
                         <th>Wisata</th>
+                        <th>Penginapan</th>
                         <th>Tanggal Pemesanan</th>
                         <th>Jumlah Tiket</th>
                         <th>Total Harga</th>
@@ -20,6 +21,7 @@
                     @foreach($pemesanan as $item)
                         <tr>
                             <td>{{ $item->wisata->nama_wisata }}</td>
+                            <td>{{ $item->penginapan ? $item->penginapan->nama_penginapan : '-' }}</td>
                             <td>{{ $item->tanggal_pemesanan->format('d/m/Y') }}</td>
                             <td>{{ $item->jumlah_tiket }}</td>
                             <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>

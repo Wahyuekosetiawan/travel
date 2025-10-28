@@ -5,7 +5,7 @@
 @section('content')
     <h1 class="mb-4">Dashboard Admin</h1>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Total Wisata</h5>
@@ -13,13 +13,27 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Total Pesanan</h5>
                     <h2>{{ $totalPemesanan }}</h2>
                 </div>
             </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Penginapan</h5>
+                    <h2>{{ $totalPenginapan }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <a href="{{ route('penginapan.index') }}" class="btn btn-primary">Kelola Penginapan</a>
+            <a href="{{ route('wisata.index') }}" class="btn btn-secondary">Kelola Wisata</a>
         </div>
     </div>
     <div class="row">

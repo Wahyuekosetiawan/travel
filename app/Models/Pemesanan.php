@@ -11,6 +11,7 @@ class Pemesanan extends Model
     protected $fillable = [
         'user_id',
         'wisata_id',
+        'penginapan_id',
         'tanggal_pemesanan',
         'jumlah_tiket',
         'total_harga',
@@ -29,5 +30,10 @@ class Pemesanan extends Model
     public function wisata()
     {
         return $this->belongsTo(Wisata::class);
+    }
+
+    public function penginapan()
+    {
+        return $this->belongsTo(Penginapan::class);
     }
 }

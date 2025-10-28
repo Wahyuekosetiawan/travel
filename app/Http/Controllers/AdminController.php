@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pemesanan;
 use App\Models\User;
 use App\Models\Wisata;
+use App\Models\Penginapan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -19,6 +20,7 @@ class AdminController extends Controller
         $totalWisata = Wisata::count();
         $totalUsers = User::where('role', 'user')->count();
         $totalPemesanan = Pemesanan::count();
+        $totalPenginapan = Penginapan::count();
 
         // ✅ Tambahkan query untuk ambil pesanan terbaru
         $recentPemesanan = Pemesanan::with(['user', 'wisata'])
@@ -30,6 +32,7 @@ class AdminController extends Controller
             'totalWisata',
             'totalUsers',
             'totalPemesanan',
+            'totalPenginapan',
             'recentPemesanan' // ✅ kirim ke view
         ));
     }
